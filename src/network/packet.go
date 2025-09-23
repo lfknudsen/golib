@@ -13,4 +13,6 @@ type TCPPacket struct {
 	options      uint32 // Unused
 }
 
-func (p *TCPPacket) Init() {}
+func (p *TCPPacket) Init(localPort string) {
+	p.srcPort = NewPort(localPort)
+}

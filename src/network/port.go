@@ -4,35 +4,41 @@ import (
 	"math/big"
 	"net"
 	"strconv"
+	"strings"
 
-	"github.com/lfknudsen/golib/src/logging/v2"
+	. "github.com/lfknudsen/golib/src/logging"
 )
 
 type Port uint16
 
 func (p Port) String() string {
-	return strconv.FormatUint(uint64(p), 10)
+	str := strconv.FormatUint(uint64(p), 10)
+	return str + strings.Repeat("0", 4-len(str))
 }
 
-func FromString(s string) Port {
+func NewPort(s string) Port {
 	val, err := strconv.ParseUint(s, 10, 16)
 	ErrorCheck(err)
 	return Port(val)
+}
+
+func (p Port) Join(h Host) IP4 {
+	return NewIP4(h, p)
 }
 
 func (p Port) TCPAddr() net.TCPAddr {
 	return net.TCPAddr{Port: p.Int()}
 }
 
-func FromTCPAddr(addr net.TCPAddr) Port {
+func PortFromTCP(addr net.TCPAddr) Port {
 	return Port(addr.Port)
 }
 
-func FromAddr(addr net.Addr) Port {
+func PortFromAddr(addr net.Addr) Port {
 	str := addr.String()
 	_, p, err := net.SplitHostPort(str)
 	ErrorCheck(err)
-	return FromString(p)
+	return NewPort(p)
 }
 
 func (p Port) Dial(network string) (net.Conn, error) {
@@ -79,6 +85,19 @@ func (p Port) Int64() int64 {
 
 func (p Port) Uint64() uint64 {
 	return uint64(p)
+}
+
+func (p Port) Bytes() []byte {
+	return strconv.AppendUint([]byte{}, p.Uint64(), 10)
+}
+
+func (p Port) Digits() []uint8 {
+	return strconv.AppendUint([]uint8{}, p.Uint64(), 10)
+}
+
+func (p Port) Digits32() []int {
+	digits := p.Digits()
+	return []int{int(digits[0]), int(digits[1]), int(digits[2]), int(digits[3])}
 }
 
 func (p Port) BigInt() big.Int {
