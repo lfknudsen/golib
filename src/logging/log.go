@@ -39,9 +39,9 @@ func ErrorCheckMsg(err error, messages ...string) {
 }
 
 type IndexOutOfRangeError struct {
-	attempted int
-	min       int
-	max       int
+	Attempted    int
+	MinSafeIndex int
+	MaxSafeIndex int
 }
 
 func IndexOutOfRange(attempted, min, max int) string {
@@ -49,9 +49,9 @@ func IndexOutOfRange(attempted, min, max int) string {
 }
 
 func (err IndexOutOfRangeError) Error() string {
-	attempted := strconv.FormatInt(int64(err.attempted), 10)
-	minIndex := strconv.FormatInt(int64(err.min), 10)
-	maxIndex := strconv.FormatInt(int64(err.max), 10)
+	attempted := strconv.FormatInt(int64(err.Attempted), 10)
+	minIndex := strconv.FormatInt(int64(err.MinSafeIndex), 10)
+	maxIndex := strconv.FormatInt(int64(err.MaxSafeIndex), 10)
 	return "Index " + attempted + " out of range [" + minIndex + "," + maxIndex + "]."
 }
 
@@ -88,11 +88,11 @@ func UnexpectedNilValueError(
 }
 
 type ConversionError struct {
-	from any
-	to   any
+	From any
+	To   any
 }
 
 func (err ConversionError) Error() string {
-	return "cannot convert " + reflect.TypeOf(err.from).String() +
-		" to " + reflect.TypeOf(err.to).String()
+	return "cannot convert " + reflect.TypeOf(err.From).String() +
+		" to " + reflect.TypeOf(err.To).String()
 }

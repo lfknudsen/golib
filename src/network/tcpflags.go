@@ -92,7 +92,7 @@ func (f TCPFlags) UnsetFlag(flag TCPFlag) (TCPFlags, error) {
 // Returns the resulting TCPFlags.
 func (f TCPFlags) Put(index uint8, value bool) (TCPFlags, error) {
 	if index < 0 || index > 7 {
-		return f, logging.IndexOutOfRange(index, 0, 7)
+		return f, logging.IndexOutOfRangeError{index, 0, 7}
 	}
 	if value {
 		return TCPFlags(f.Uint8() | (0b1000_0000 >> index)), nil
@@ -105,7 +105,7 @@ func (f TCPFlags) Put(index uint8, value bool) (TCPFlags, error) {
 // Returns this TCPFlags.
 func (f TCPFlags) PutR(index uint8, value bool) (TCPFlags, error) {
 	if index < 0 || index > 7 {
-		return f, logging.IndexOutOfRange(index, 0, 7)
+		return f, logging.IndexOutOfRangeError{index, 0, 7}
 	}
 	if value {
 		return TCPFlags(f.Uint8() | (0b0000_0001 << index)), nil
@@ -116,7 +116,7 @@ func (f TCPFlags) PutR(index uint8, value bool) (TCPFlags, error) {
 
 func BitAt(bitfield, index uint8) (bool, error) {
 	if index < 0 || index > 7 {
-		return false, logging.IndexOutOfRange(index, 0, 7)
+		return false, logging.IndexOutOfRangeError{index, 0, 7}
 	}
 	return (bitfield & (0b1000_0000 >> index)) == 0b1000_0000>>index, nil
 }
@@ -131,7 +131,7 @@ func BitAtInt(bitfield, index uint8) (int, error) {
 
 func BitAtR(bitfield, index uint8) (bool, error) {
 	if index < 0 || index > 7 {
-		return false, logging.IndexOutOfRange(index, 0, 7)
+		return false, logging.IndexOutOfRangeError{index, 0, 7}
 	}
 	return (bitfield & (0b0000_0001 << index)) == 0b0000_0001<<index, nil
 }
@@ -147,7 +147,7 @@ func BitAtRInt(bitfield, index uint8) (int, error) {
 // FlipBit flips the bit at the 0-indexed position from the left in value.
 func FlipBit(value uint8, index uint8) (uint8, error) {
 	if index < 0 || index > 7 {
-		return value, logging.IndexOutOfRange(index, 0, 7)
+		return value, logging.IndexOutOfRangeError{index, 0, 7}
 	}
 	newVal, err := BitAt(value, index)
 	var isolated uint8 = 0b1000_0000 >> index
@@ -161,7 +161,7 @@ func FlipBit(value uint8, index uint8) (uint8, error) {
 // FlipBitR flips the bit at the 0-indexed position from the right in value.
 func FlipBitR(value uint8, index uint8) (uint8, error) {
 	if index < 0 || index > 7 {
-		return value, logging.IndexOutOfRange(index, 0, 7)
+		return value, logging.IndexOutOfRangeError{index, 0, 7}
 	}
 	newVal, err := BitAtR(value, index)
 	var isolated uint8 = 0b0000_0001 << index

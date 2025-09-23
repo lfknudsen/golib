@@ -1,3 +1,3 @@
-module github.com/lfknudsen/golib/src/network/v2
+module github.com/lfknudsen/golib
 
 go 1.25.1
