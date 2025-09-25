@@ -9,7 +9,19 @@ import (
 	. "github.com/lfknudsen/golib/src/logging"
 )
 
-type Port uint16
+type Uint16 uint16
+type Port Uint16
+
+func (p Port) Bool() bool {
+	if p == 0 {
+		return false
+	}
+	return true
+}
+
+func (p Port) ByteString() []byte {
+	return []byte(p.String())
+}
 
 func (p Port) String() string {
 	str := strconv.FormatUint(uint64(p), 10)
@@ -18,11 +30,11 @@ func (p Port) String() string {
 
 func NewPort(s string) Port {
 	val, err := strconv.ParseUint(s, 10, 16)
-	ErrorCheck(err)
+	FatalCheck(err)
 	return Port(val)
 }
 
-func (p Port) Join(h Host) IP4 {
+func (p Port) Join(h Host) IP4Address {
 	return NewIP4(h, p)
 }
 
@@ -37,7 +49,7 @@ func PortFromTCP(addr net.TCPAddr) Port {
 func PortFromAddr(addr net.Addr) Port {
 	str := addr.String()
 	_, p, err := net.SplitHostPort(str)
-	ErrorCheck(err)
+	FatalCheck(err)
 	return NewPort(p)
 }
 

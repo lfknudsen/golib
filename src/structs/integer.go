@@ -1,38 +1,47 @@
 package structs
 
-import "strconv"
+import (
+	"errors"
+	"math"
+	"math/big"
+	"reflect"
+	"strconv"
+)
 
-// Integer is a type that exists to be able to treat booleans as integers and vice versa;
+// Int is a type that exists to be able to treat booleans as integers and vice versa;
 // one aspect of C that I really miss in other languages.
 // Bool conversions work on the concept that 0 = false, and non-zero values true.
-type Integer int
+type Int int
 
-func (i Integer) String() string { return strconv.Itoa(int(i)) }
-func (i Integer) Bool() bool     { return i != 0 }
-func (i Integer) Boolean() Bool  { return i != 0 }
+type IInt interface {
+	Int() Int
+}
+
+func (i Int) String() string { return strconv.Itoa(int(i)) }
+func (i Int) Bool() Bool     { return i != 0 }
 
 // =============================================================================
-// Integer Mathematics
+// Int Mathematics
 // =============================================================================
 
-func (i Integer) AbsI() int { return int(max(i, -i)) }
+func (i Int) AbsI() Int { return max(i, -i) }
 
-func (i Integer) Abs() Integer {
+func (i Int) Abs() Int {
 	return max(i, -i)
 }
 
-func AbsI(i int) int {
+func AbsI(i Int) Int {
 	return max(i, -i)
 }
 
-func MaxInt(a, b Integer) Integer {
+func MaxInt(a, b Int) Int {
 	if a > b {
 		return a
 	}
 	return b
 }
 
-func MinInt(a, b Integer) Integer {
+func MinInt(a, b Int) Int {
 	if a > b {
 		return b
 	}
@@ -40,22 +49,30 @@ func MinInt(a, b Integer) Integer {
 }
 
 // =============================================================================
-// Integer Comparison Functions
+// Bool Mathematics
 // =============================================================================
 
-func (i Integer) Compare(other Integer) Integer {
-	return Compare(i, other)
+func (i Int) AddB(o Bool) Int {
+	return i + o.Int()
 }
 
-func (i Integer) CompareI(other Integer) int {
-	return CompareI(i, other)
+func (i Int) SubB(o Bool) Int {
+	return i - o.Int()
 }
 
-func Compare(a, b Integer) Integer {
-	return Integer(CompareI(a, b))
+func (i Int) MulB(o Bool) Int {
+	return i * o.Int()
 }
 
-func CompareI(a, b Integer) int {
+// =============================================================================
+// Int Comparison Functions
+// =============================================================================
+
+func (i Int) Compare(other Int) Int {
+	return CompareInts(i, other)
+}
+
+func CompareInts(a, b Int) Int {
 	if a < b {
 		return -1
 	}
@@ -65,17 +82,68 @@ func CompareI(a, b Integer) int {
 	return 0
 }
 
+func (i Int) CompareB(other Bool) Int {
+	return CompareInts(i, other.Int())
+}
+
 // =============================================================================
-// Known-safe Integer Type Casting
+// Known-safe Int Type Casting
 // =============================================================================
 
-func (i Integer) Int() int        { return int(i) }
-func (i Integer) Uint() uint      { return uint(i) }
-func (i Integer) Int32() int32    { return int32(i) }
-func (i Integer) Uint32() uint32  { return uint32(i) }
-func (i Integer) Long() int64     { return int64(i) }
-func (i Integer) Ulong() uint64   { return uint64(i) }
-func (i Integer) Int64() int64    { return int64(i) }
-func (i Integer) Uint64() uint64  { return uint64(i) }
-func (i Integer) Float() float32  { return float32(i) }
-func (i Integer) Double() float64 { return float64(i) }
+func (i Int) Int() int        { return int(i) }
+func (i Int) Uint() uint      { return uint(i) }
+func (i Int) Int32() int32    { return int32(i) }
+func (i Int) Uint32() uint32  { return uint32(i) }
+func (i Int) Long() int64     { return int64(i) }
+func (i Int) Ulong() uint64   { return uint64(i) }
+func (i Int) Int64() int64    { return int64(i) }
+func (i Int) Uint64() uint64  { return uint64(i) }
+func (i Int) Float() float32  { return float32(i) }
+func (i Int) Double() float64 { return float64(i) }
+
+func SumOverflowInt(a, b int) bool {
+	bigA := big.NewInt(int64(a))
+	bigB := big.NewInt(int64(b))
+	bigMax := big.NewInt(math.MaxInt)
+	bigA.Add(bigA, bigB)
+	return bigA.Cmp(bigMax) > 1
+}
+
+type MaxVal struct {
+	maximums map[any]uint64
+}
+
+func MaxValue(a any) (uint64, error) {
+	t := reflect.TypeOf(a)
+	switch t.Kind() {
+	case reflect.Int8:
+		return math.MaxInt8, nil
+	case reflect.Uint8:
+		return math.MaxUint8, nil
+	case reflect.Int16:
+		return math.MaxInt16, nil
+	case reflect.Uint16:
+		return math.MaxUint16, nil
+	case reflect.Int:
+		return math.MaxInt, nil
+	case reflect.Uint:
+		return math.MaxUint, nil
+	case reflect.Int32:
+		return math.MaxInt32, nil
+	case reflect.Uint32:
+		return math.MaxUint32, nil
+	case reflect.Int64:
+		return math.MaxInt64, nil
+	case reflect.Uint64:
+		return math.MaxUint64, nil
+	case reflect.Float32:
+		return math.MaxFloat32, nil
+	case reflect.Float64:
+		return math.MaxFloat64, nil
+	case reflect.Bool:
+		return 1, nil
+	case reflect.Complex64, reflect.Complex128:
+		return math.MaxUint64, errors.New("complex number without simple limit " + t.Kind().String())
+	}
+	return 0, errors.New("non-numeric type " + t.Kind().String())
+}
