@@ -1,14 +1,11 @@
 package logging
 
 import (
-	"hash"
-	"hash/crc32"
-	"log"
 	"reflect"
 	"strconv"
-	"strings"
 
 	"github.com/lfknudsen/golib/src/collections"
+	"github.com/lfknudsen/golib/src/maths"
 	"github.com/lfknudsen/golib/src/structs"
 )
 
@@ -107,11 +104,11 @@ type ExUnexpectedType struct {
 }
 
 func (err ExUnexpectedType) Error() string {
-	return "wrong type: " + reflect.TypeOf(err.Input).Kind().String() + ". Was expecting " + err.expected
+	return "wrong type: " + reflect.TypeOf(err.Input).Kind().String() + ". Was expecting " + err.Expected
 }
 
 func (err ExNonRealNumber) Acceptable() []reflect.Kind {
-
+	return maths.RealNumbers
 }
 
 func (err ExNonRealNumber) Error() string {

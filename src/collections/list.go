@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"github.com/lfknudsen/golib/src/logging"
+
 	"github.com/lfknudsen/golib/src/structs"
 )
 
@@ -14,27 +15,28 @@ type List[T interface{}] struct {
 	array    []T
 }
 
-func (l List[T]) Get(index structs.Int) (any, error) {
+func (l *List[T]) Get(index structs.Int) (any, error) {
 	if index < 0 || index >= l.length {
 		return nil, logging.IndexOutOfRangeError{
 			Attempted:    index,
 			MinSafeIndex: 0,
-			MaxSafeIndex: l.length - 1}
+			MaxSafeIndex: l.length - 1,
+		}
 	}
 	return l.array[index], nil
 }
 
-func (l List[T]) First() any {
+func (l *List[T]) First() any {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (l List[T]) Last() any {
+func (l *List[T]) Last() any {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (l List[T]) Length() int64 {
+func (l *List[T]) Length() int64 {
 	//TODO implement me
 	panic("implement me")
 }
@@ -74,11 +76,26 @@ func CollectIterative[T any, C any](array []T, accumulator C, f func(T, C) (C, e
 	return accumulator, err
 }
 
-type IntList []int
+type IntList List[structs.Int]
 
-func (l IntList) Collect(f func(val int, coll int64) (int, int64)) (int64, error) {
-	var collector int64 = 0
-	for _, i := range l {
-		_, collector = f(i, collector)
+func (l *IntList) Aggregate(
+	f func(element structs.Int, aggregate structs.Int64) (aggregated structs.Int64, err error)) (
+	finalAggregate structs.Int64, finalErr error) {
+	var collector structs.Int64 = 0
+	var err error
+	for _, i := range l.array {
+		collector, err = f(i, collector)
+		if err != nil {
+			break
+		}
 	}
+	return collector, err
+}
+
+func (l *IntList) Sum() structs.Int64 {
+	sum := structs.Int64(0)
+	for i := 0; i < len(l.array); i++ {
+		sum += structs.Int64(l.array[i])
+	}
+	return sum
 }
