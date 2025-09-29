@@ -48,8 +48,11 @@ func SumAll(array []structs.Int) (structs.Int, error) {
 			RefValue:   reflect.ValueOf([]structs.Int{}),
 		}
 	}
-
-	return array[0] + SumAll(array[1:]), nil
+	if len(array) == 0 {
+		return 0, nil
+	}
+	sum, err := SumAll(array[1:])
+	return array[0] + sum, err
 }
 
 func CollectRecursive[T any, C any](
