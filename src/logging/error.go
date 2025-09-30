@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/lfknudsen/golib/src/collections"
 	"github.com/lfknudsen/golib/src/maths"
 	"github.com/lfknudsen/golib/src/structs"
+	"github.com/lfknudsen/golib/src/text"
 )
 
 type ErrorType interface {
@@ -112,6 +112,7 @@ func (err ExNonRealNumber) Acceptable() []reflect.Kind {
 }
 
 func (err ExNonRealNumber) Error() string {
+	acceptable, _ := text.ConcatBetween(maths.RealNumbers, "\n")
 	return "non-real numerical type " + err.Input.String() +
-		"\nAcceptable options are:" + collections.Concat(err.Acceptable(), "\n")
+		"\nAcceptable options are:" + acceptable
 }

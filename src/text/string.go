@@ -1,8 +1,9 @@
 package text
 
 import (
-	"container/list"
+	"errors"
 	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -189,20 +190,28 @@ func Concat(array []any) string {
 
 // ConcatBetween assembles a string out of the supplied array, separating each
 // element with the delim string. An empty array returns an empty string.
-func ConcatBetween(array []any, delim string) string {
-	if len(array) == 0 {
-		return ""
+func ConcatBetween(array any, delim string) (string, error) {
+	var arr []any
+	if reflect.TypeOf(array).Kind() == reflect.Array {
+		arr = array.([]any)
+	} else {
+		return "", errors.New("input to ConcatBetween is a " +
+			reflect.TypeOf(array).Kind().String() + ", not an array")
+	}
+
+	if len(arr) == 0 {
+		return "", nil
 	}
 	if delim == "" {
-		return Concat(array)
+		return Concat(arr), nil
 	}
-	if len(array) == 1 {
-		return array[0].(string)
+	if len(arr) == 1 {
+		return arr[0].(string), nil
 	}
 
 	builder := strings.Builder{}
-	var capNeeded = len(array) - 1
-	for _, value := range array {
+	var capNeeded = len(arr) - 1
+	for _, value := range arr {
 		switch value := value.(type) {
 		case fmt.Stringer:
 			capNeeded += len(value.String())
@@ -213,11 +222,11 @@ func ConcatBetween(array []any, delim string) string {
 		}
 	}
 	builder.Grow(capNeeded)
-	for _, value := range array[:len(array)-1] {
+	for _, value := range arr[:len(arr)-1] {
 		builder.WriteString(fmt.Sprintf("%v%s", value, delim))
 	}
-	builder.WriteString(fmt.Sprintf("%v", array[len(array)-1]))
-	return builder.String()
+	builder.WriteString(fmt.Sprintf("%v", arr[len(arr)-1]))
+	return builder.String(), nil
 }
 
 func RemoveAllSubstrings(src string, needles ...string) string {
@@ -235,11 +244,12 @@ func RemoveAllSubstrings(src string, needles ...string) string {
 		}
 		//needleArray[i] = []rune(needle)
 	}
-	//return String(RemoveAllRunes(&runes, &needleArray))
+	return "NOT IMPLEMENTED!"
 }
 
 func RemoveAllRunes(src *[]rune, needles *[][]rune) []rune {
 	for i := 0; i < len(*needles); i++ {
 
 	}
+	return []rune("NOT IMPLEMENTED!")
 }

@@ -1,10 +1,12 @@
 package network
 
-type IP6Header struct {
-	HeaderWord1   Uint32
-	PayloadLength Uint16
-	NextHeader    Uint8
-	HopLimit      Uint8
+import "github.com/lfknudsen/golib/src/structs"
+
+type HeaderIP6 struct {
+	HeaderWord1   structs.Uint32
+	PayloadLength structs.Uint16
+	NextHeader    structs.Uint8
+	HopLimit      structs.Uint8
 }
 
-type IP6Address [8]uint16
+type AddressIP6 [8]uint16

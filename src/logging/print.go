@@ -3,22 +3,32 @@ package logging
 import (
 	"fmt"
 	"strings"
+	"sync"
 )
+
+// logBuilder is an internal, thread-safe string builder re-used for each string
+// operation.
+var logBuilder strings.Builder = strings.Builder{}
+var logBuilderLock sync.Mutex = sync.Mutex{}
 
 type StringPrinter interface {
 	String() string
 }
 
+// Out prints all the parameters, separated by a single space, to the standard output.
 func Out(a ...interface{}) {
 	OutDelim(" ", a)
 }
 
+// Concat joins together all the parameters into a single string.
 func Concat(a ...interface{}) string {
-	b := strings.Builder{}
+	logBuilderLock.Lock()
+	defer logBuilderLock.Unlock()
+	logBuilder.Reset()
 	for _, c := range a {
-		b.WriteString(c.(string))
+		logBuilder.WriteString(c.(string))
 	}
-	return b.String()
+	return logBuilder.String()
 }
 
 func OutDelim(delim string, a ...interface{}) {

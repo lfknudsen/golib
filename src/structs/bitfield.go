@@ -34,7 +34,7 @@ func GetReadDirection() BitReadDirection {
 	return _bitFieldReadingDirection
 }
 
-type Bitfield8 = Uint8
+type Bitfield8 uint8
 type Bitfield16 = Uint16
 type Bitfield32 = Uint32
 type Bitfield64 = Uint64

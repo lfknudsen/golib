@@ -6,7 +6,7 @@ func (h *Host) String() string {
 	return string(*h)
 }
 
-func (h *Host) Join(p Port) IP4Address {
+func (h *Host) Join(p Port) AddressIP4 {
 	return NewIP4(*h, p)
 }
 

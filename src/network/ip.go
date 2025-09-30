@@ -4,7 +4,7 @@ type IPAddress interface {
 	Address() string
 }
 
-type IPConnection struct {
+type Connection struct {
 	localAddr  IPAddress
 	remoteAddr IPAddress
 }

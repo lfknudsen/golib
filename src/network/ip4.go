@@ -1,11 +1,11 @@
 package network
 
-type IP4Address struct {
+type AddressIP4 struct {
 	host Host
 	port Port
 }
 
-type IP4Packet struct {
+type v4Packet struct {
 	VersionAndIHL          uint8
 	TOS                    uint8
 	TotalLength            uint16
@@ -16,17 +16,17 @@ type IP4Packet struct {
 	HeaderChecksum         uint16
 	SourceAddress          uint32
 	DestinationAddress     uint32
-	Options                *IP4PacketOptions
-	Data                   *IP4PacketData
+	Options                *OptionsIP4
+	Data                   *DataIP4
 }
 
-type IP4PacketOptions []byte
-type IP4PacketData []byte
+type OptionsIP4 []byte
+type DataIP4 []byte
 
-func NewIP4(h Host, p Port) IP4Address {
-	return IP4Address{port: p, host: h}
+func NewIP4(h Host, p Port) AddressIP4 {
+	return AddressIP4{port: p, host: h}
 }
 
-func IP4FromString(h string, p string) IP4Address {
-	return IP4Address{host: NewHost(h), port: NewPort(p)}
+func IP4FromString(h string, p string) AddressIP4 {
+	return AddressIP4{host: NewHost(h), port: NewPort(p)}
 }

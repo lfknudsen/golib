@@ -1,5 +1,5 @@
 package text
 
 const (
-	Empty String = ""
+	EMPTY String = ""
 )

@@ -7,9 +7,10 @@ import (
 	"strings"
 
 	. "github.com/lfknudsen/golib/src/logging"
+
+	. "github.com/lfknudsen/golib/src/structs"
 )
 
-type Uint16 uint16
 type Port Uint16
 
 func (p Port) Bool() bool {
@@ -34,7 +35,7 @@ func NewPort(s string) Port {
 	return Port(val)
 }
 
-func (p Port) Join(h Host) IP4Address {
+func (p Port) Join(h Host) AddressIP4 {
 	return NewIP4(h, p)
 }
 
