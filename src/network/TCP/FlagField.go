@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	. "github.com/lfknudsen/golib/src/logging"
-
 	. "github.com/lfknudsen/golib/src/structs"
 )
 

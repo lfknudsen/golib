@@ -17,7 +17,7 @@ type List[T interface{}] struct {
 
 func (l *List[T]) Get(index structs.Int) (any, error) {
 	if index < 0 || index >= l.length {
-		return nil, logging.IndexOutOfRangeError{
+		return nil, structs.IndexOutOfRangeError{
 			Attempted:    index,
 			MinSafeIndex: 0,
 			MaxSafeIndex: l.length - 1,

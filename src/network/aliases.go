@@ -1,21 +1,17 @@
 package network
 
-import (
-	"github.com/lfknudsen/golib/src/network/IP"
-)
+type IP4Options = OptionsIP4
+type IP4Data = DataIP4
+type IP4Payload = DataIP4
 
-type IP4Options = IP.Options
-type IP4Data = IP.Data
-type IP4Payload = IP.Data
+type IPv4 = AddressIP4
+type IPv4Packet = v4Packet
+type IPv4PacketOptions = OptionsIP4
+type IPv4PacketData = DataIP4
+type IPv4Options = OptionsIP4
+type IPv4Data = DataIP4
+type IPv4Payload = DataIP4
 
-type IPv4 = IPAddress
-type IPv4Packet = IP.Packet
-type IPv4PacketOptions = IP.Options
-type IPv4PacketData = IP.Data
-type IPv4Options = IP.Options
-type IPv4Data = IP.Data
-type IPv4Payload = IP.Data
-
-type IPv6 = IPAddress
-type IPv6Address = IPAddress
-type IPv6Header = IP.Header
+type IPv6 = AddressIP6
+type IPv6Address = AddressIP6
+type IPv6Header = HeaderIP6

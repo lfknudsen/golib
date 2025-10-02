@@ -70,7 +70,7 @@ func (d *Directory) Mode() fs.FileMode {
 }
 
 func (d *Directory) ModTime() time.Time {
-	os.OpenRoot()
+	panic("implement me")
 }
 
 func (d *Directory) IsDir() bool {
@@ -198,7 +198,9 @@ func (d *Directory) Size() int64 {
 	return size
 }
 
-func (d *Directory) SizeChildren() (os.FileInfo, error) {}
+func (d *Directory) SizeChildren() (os.FileInfo, error) {
+	panic("implement me")
+}
 
 func (d *Directory) SubDirs() []os.DirEntry {
 	var dirs []os.DirEntry
