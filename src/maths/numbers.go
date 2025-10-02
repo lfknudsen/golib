@@ -20,7 +20,6 @@ var IsRealNumber = map[reflect.Kind]bool{
 	reflect.Uint64:  true,
 	reflect.Float32: true,
 	reflect.Float64: true,
-	_:               false,
 }
 
 var RealNumbers = []reflect.Kind{
