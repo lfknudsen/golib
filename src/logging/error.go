@@ -2,37 +2,11 @@ package logging
 
 import (
 	"reflect"
-	"strconv"
-
-	"github.com/lfknudsen/golib/src/maths"
-	"github.com/lfknudsen/golib/src/structs"
-	"github.com/lfknudsen/golib/src/text"
 )
 
 type ErrorType interface {
 	Error() string
 	String() string
-}
-
-type IndexOutOfRangeError struct {
-	Attempted    structs.Int
-	MinSafeIndex structs.Int
-	MaxSafeIndex structs.Int
-}
-
-func (err IndexOutOfRangeError) String() string {
-	return err.Error()
-}
-
-func IndexOutOfRange(attempted, min, max structs.Int) string {
-	return IndexOutOfRangeError{attempted, min, max}.Error()
-}
-
-func (err IndexOutOfRangeError) Error() string {
-	attempted := strconv.FormatInt(int64(err.Attempted), 10)
-	minIndex := strconv.FormatInt(int64(err.MinSafeIndex), 10)
-	maxIndex := strconv.FormatInt(int64(err.MaxSafeIndex), 10)
-	return "Index " + attempted + " out of range [" + minIndex + "," + maxIndex + "]."
 }
 
 type UnimplementedFunctionError struct {
@@ -94,10 +68,6 @@ type IWrongType interface {
 	Acceptable() []reflect.Kind
 }
 
-type ExNonRealNumber struct {
-	Input reflect.Kind
-}
-
 type ExUnexpectedType struct {
 	Expected string
 	Input    any
@@ -105,14 +75,4 @@ type ExUnexpectedType struct {
 
 func (err ExUnexpectedType) Error() string {
 	return "wrong type: " + reflect.TypeOf(err.Input).Kind().String() + ". Was expecting " + err.Expected
-}
-
-func (err ExNonRealNumber) Acceptable() []reflect.Kind {
-	return maths.RealNumbers
-}
-
-func (err ExNonRealNumber) Error() string {
-	acceptable, _ := text.ConcatBetween(maths.RealNumbers, "\n")
-	return "non-real numerical type " + err.Input.String() +
-		"\nAcceptable options are:" + acceptable
 }

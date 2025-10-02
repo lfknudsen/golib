@@ -4,8 +4,6 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
-
-	"github.com/lfknudsen/golib/src/logging"
 )
 
 type BitReadDirection bool
@@ -64,7 +62,7 @@ type BitArray256 [256]Bit
 func (f Bitfield8) Put(index Bitfield8, value Bool) (Bitfield8, error) {
 	if index < 0 || index > 7 {
 		return f,
-			logging.IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
+			IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
 	}
 	if value {
 		return f | (0b1000_0000 >> index), nil
@@ -77,7 +75,7 @@ func (f Bitfield8) Put(index Bitfield8, value Bool) (Bitfield8, error) {
 // Returns this Bitfield8.
 func (f Bitfield8) PutR(index Bitfield8, value Bool) (Bitfield8, error) {
 	if index < 0 || index > 7 {
-		return f, logging.IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
+		return f, IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
 	}
 	if value {
 		return f | (0b0000_0001 << index), nil
@@ -88,7 +86,7 @@ func (f Bitfield8) PutR(index Bitfield8, value Bool) (Bitfield8, error) {
 
 func BitAt(bitfield, index Bitfield8) (Bool, error) {
 	if index < 0 || index > 7 {
-		return false, logging.IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
+		return false, IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
 	}
 	return (bitfield & (0b1000_0000 >> index)) == 0b1000_0000>>index, nil
 }
@@ -103,7 +101,7 @@ func BitAtInt(bitfield, index Bitfield8) (Int, error) {
 
 func BitAtR(bitfield, index Bitfield8) (Bool, error) {
 	if index < 0 || index > 7 {
-		return false, logging.IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
+		return false, IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
 	}
 	return (bitfield & (0b0000_0001 << index)) == 0b0000_0001<<index, nil
 }
@@ -119,7 +117,7 @@ func BitAtRInt(bitfield, index Bitfield8) (Int, error) {
 // FlipBitL flips the bit at the 0-indexed position from the left in value.
 func FlipBitL(value, index Bitfield8) (Bitfield8, error) {
 	if index < 0 || index > 7 {
-		return value, logging.IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
+		return value, IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
 	}
 	newVal, err := BitAt(value, index)
 	var isolated Bitfield8 = 0b1000_0000 >> index
@@ -132,7 +130,7 @@ func FlipBitL(value, index Bitfield8) (Bitfield8, error) {
 // FlipBitR flips the bit at the 0-indexed position from the right in value.
 func FlipBitR(value, index Bitfield8) (Bitfield8, error) {
 	if index < 0 || index > 7 {
-		return value, logging.IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
+		return value, IndexOutOfRangeError{Attempted: Int(index), MaxSafeIndex: 7}
 	}
 	newVal, err := BitAtR(value, index)
 	var isolated Bitfield8 = 0b0000_0001 << index

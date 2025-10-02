@@ -136,14 +136,12 @@ func MaxValue(a any) (uint64, error) {
 		return math.MaxInt64, nil
 	case reflect.Uint64:
 		return math.MaxUint64, nil
-	case reflect.Float32:
-		return math.MaxFloat32, nil
-	case reflect.Float64:
-		return math.MaxFloat64, nil
 	case reflect.Bool:
 		return 1, nil
-	case reflect.Complex64, reflect.Complex128:
-		return math.MaxUint64, errors.New("complex number without simple limit " + t.Kind().String())
+	default:
+		return 0,
+			errors.New("Type has larger maximum than a uint64, or is non-numeric: " +
+				t.Kind().String())
 	}
-	return 0, errors.New("non-numeric type " + t.Kind().String())
+
 }
