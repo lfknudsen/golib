@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -95,4 +96,16 @@ func FromBytes(b [3]byte) (*Version, error) {
 		Minor: b[1],
 		Patch: b[2],
 	}, nil
+}
+
+func DecompileVersion(r io.Reader) (*Version, error) {
+	buffer := [3]byte{}
+	n, err := r.Read(buffer[:])
+	if err != nil {
+		return nil, err
+	}
+	if n != 3 {
+		return nil, errors.New("invalid version string")
+	}
+	return FromBytes(buffer)
 }
