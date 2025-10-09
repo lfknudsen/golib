@@ -196,3 +196,45 @@ func (v *Version) Equals(other *Version) bool {
 		v.Minor == other.Minor &&
 		v.Patch == other.Patch
 }
+
+// IsLowerThan returns true if the receiving Version is lower than the implicit
+// given one.
+func (v *Version) IsLowerThan(major, minor, patch uint8) bool {
+	if v.Major > major {
+		return false
+	}
+	if v.Major < major {
+		return true
+	}
+	if v.Minor > minor {
+		return false
+	}
+	if v.Minor < minor {
+		return true
+	}
+	if v.Patch >= patch {
+		return false
+	}
+	return true
+}
+
+// IsLEQTo returns true if the receiving Version is less than or equal to the
+// implicit given one.
+func (v *Version) IsLEQTo(major, minor, patch uint8) bool {
+	if v.Major > major {
+		return false
+	}
+	if v.Major < major {
+		return true
+	}
+	if v.Minor > minor {
+		return false
+	}
+	if v.Minor < minor {
+		return true
+	}
+	if v.Patch > patch {
+		return false
+	}
+	return true
+}
