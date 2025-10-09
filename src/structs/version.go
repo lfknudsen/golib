@@ -109,3 +109,90 @@ func DecompileVersion(r io.Reader) (*Version, error) {
 	}
 	return FromBytes(buffer)
 }
+
+// IsGreaterThan returns whether the receiver Version is strictly higher than
+// the Version given by parameter.
+//
+// See also [Version.IsGEQTo] and [Version.CompareTo].
+func (v *Version) IsGreaterThan(other *Version) bool {
+	if v.Major < other.Major {
+		return false
+	}
+	if v.Major > other.Major {
+		return true
+	}
+	if v.Minor < other.Minor {
+		return false
+	}
+	if v.Minor > other.Minor {
+		return true
+	}
+	if v.Patch > other.Patch {
+		return true
+	}
+	return false
+}
+
+// IsGEQTo returns whether the receiver Version is at least as high as the
+// one given by parameter.
+//
+// See also [Version.IsGreaterThan] and [Version.CompareTo].
+func (v *Version) IsGEQTo(other *Version) bool {
+	if v.Major < other.Major {
+		return false
+	}
+	if v.Major > other.Major {
+		return true
+	}
+	if v.Minor < other.Minor {
+		return false
+	}
+	if v.Minor > other.Minor {
+		return true
+	}
+	if v.Patch < other.Patch {
+		return false
+	}
+	return true
+}
+
+// CompareTo compares the two Version structs.
+//
+// If the receiver Version is lower, this function returns -1.
+//
+// If the Version given by parameter is lower, this function returns 1.
+//
+// Otherwise (in the case where they are equal), this function returns 0.
+//
+// See also [Version.IsGreaterThan] and [Version.IsGEQTo].
+func (v *Version) CompareTo(other *Version) int {
+	if v.Major < other.Major {
+		return -1
+	}
+	if v.Major > other.Major {
+		return 1
+	}
+	if v.Minor < other.Minor {
+		return -1
+	}
+	if v.Minor > other.Minor {
+		return 1
+	}
+	if v.Patch < other.Patch {
+		return -1
+	}
+	if v.Patch > other.Patch {
+		return 1
+	}
+	return 0
+}
+
+// Equals returns true if the receiving and given Version structs are strictly equal
+// in value.
+//
+// Equivalent to [Version.CompareTo] == 0, except faster.
+func (v *Version) Equals(other *Version) bool {
+	return v.Major == other.Major &&
+		v.Minor == other.Minor &&
+		v.Patch == other.Patch
+}
